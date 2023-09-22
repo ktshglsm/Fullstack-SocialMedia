@@ -1,0 +1,72 @@
+@import "../../style.scss";
+
+.stories {
+  display: flex;
+  gap: 10px;
+  height: 250px;
+  margin-bottom: 30px;
+  @include tablet {
+    height: 220px;
+    overflow-x: scroll;
+    width: calc(76vw - 20px);
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  @include mobile {
+    height: 180px;
+    overflow-x: scroll;
+    width: calc(100vw - 20px);
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  
+
+  .story {
+    flex: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    @include tablet {
+      flex: none;
+      width: 140px;
+    }
+
+    @include mobile {
+      flex: none;
+      width: 100px;
+    }
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    span {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    button {
+      position: absolute;
+      left: 10px;
+      bottom: 40px;
+      color: #fff;
+      background-color: #5271ff;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      font-size: 28px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
