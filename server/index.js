@@ -1,10 +1,6 @@
 const express = require("express");
 const app = express();
-const userRoutes = require("./routes/users.js")
-const postRoutes = require("./routes/posts.js")
-const likeRoutes = require("./routes/likes.js")
-const commentRoutes = require("./routes/comments.js")
-const authRoutes = require("./routes/auth.js")
+const route = require("./routes");
 const cookieParser = require("cookie-parser")
 const cors = require("cors")
 const multer = require("multer")
@@ -39,11 +35,8 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
     const file = req.file;
     res.status(200).json(file.filename);
 });
-app.use("/api/users", userRoutes)
-app.use("/api/posts", postRoutes)
-app.use("/api/likes", likeRoutes)
-app.use("/api/comments", commentRoutes)
-app.use("/api/auth", authRoutes)
+
+route(app);
 
 app.post('/find-related-words', (req, res) => {
     const wordToLookup = req.body.word.toLowerCase();

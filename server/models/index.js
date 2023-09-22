@@ -17,5 +17,10 @@ const User = UserModel(sequelize, DataTypes);
 
 
 module.exports = {
-  User, Comment, Like, Post, Relationship, Story
+  Comment,
+  Like,
+  Post,
+  Relationship,
+  Story,
+  User
 };
