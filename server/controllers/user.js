@@ -11,12 +11,14 @@ const getAllUser = async (req, res) => {
     }
 }
 
-const getUser = async (req, res) => {
+const getUser = async (req, res, next) => {
     try {
         const userId = req.params.userId;
         const user = await User.findByPk(userId);
         if (!user) {
-            res.status(404).json({ message: 'Người dùng không tồn tại' });
+            next({ message: 'Người dùng không tồn tại', statusCode: 404 })
+
+            // res.status(404).json({ message: 'Người dùng không tồn tại' });
         } else {
             res.json(user);
         }
@@ -27,25 +29,22 @@ const getUser = async (req, res) => {
 
 
 }
-const updateUser = async (req, res) => {
-    const token = req.cookies.accessToken;
-    if (!token) return res.status(401).json("Not logged in!");
-    jwt.verify(token, "secretKey", async (err, userInfo) => {
-        if (err) return res.status(403).json("Token is not valid!");
-        const userId = userInfo.id;
+const updateUser = async (req, res, next) => {
+    const userId = req.body.userId;
+    try {
         const user = await User.findByPk(userId);
         if (!user) {
-            res.status(404).json({ message: 'Người dùng không tồn tại' });
+            next({ message: 'Người dùng không tồn tại', statusCode: 404 })
+            // res.status(404).json({ message: 'Người dùng không tồn tại' });
         } else {
             await user.update(req.body);
             res.status(200).json(user);
         }
-    });
+    } catch (error) {
+        next(error);
+    }
+
 }
-
-
-
-
 
 
 module.exports = {

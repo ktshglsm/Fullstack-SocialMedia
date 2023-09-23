@@ -1,32 +1,44 @@
 const moment = require("moment/moment.js");
 const { db } = require("../connect.js");
 const jwt = require("jsonwebtoken");
+const { Comment, User } = require("../models")
 
-const getComments = (req, res) => {
-    const q = `SELECT c.*, u.id AS userId, name, profilePic FROM comments AS c JOIN users AS u ON (u.id = c.userId)
-      WHERE c.postId = ? ORDER BY c.createdAt DESC
-      `;
 
-    db.query(q, [req.query.postId], (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res.status(200).json(data);
-    });
+const getComments = async (req, res) => {
+    const { postId } = req.query
+    try {
+        const comments = await Comment.findAll({
+
+            include: {
+                model: User,
+                attributes: ['name', 'profilePic']
+            },
+            where: {
+                postId
+            },
+            order: [['createdAt', 'DESC']],
+        })
+        return res.status(200).json(comments);
+    } catch (error) {
+        if (error) return res.status(500).json(error);
+    }
 };
-const addComment = (req, res) => {
-    const token = req.cookies.accessToken;
-    if (!token) return res.status(401).json("Not logged in!");
-    jwt.verify(token, "secretKey", (err, userInfo) => {
-        if (err) return res.status(403).json("Token is not valid!");
-
-        const q = "INSERT INTO comments(`desc`,`createdAt`,`postId`,`userId`) VALUES (?)";
-        const values = [req.body.desc, moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"), req.body.postId, userInfo.id]
-        db.query(q, [values], (err, data) => {
-            if (err) return res.status(500).json(err);
+const addComment = async (req, res) => {
+    try {
+        const token = req.cookies.accessToken;
+        if (!token) return res.status(401).json("Not logged in!");
+        jwt.verify(token, "secretKey", async (err, userInfo) => {
+            if (err) return res.status(403).json("Token is not valid!");
+            const newComment = { ...req.body, userId: userInfo.id }
+            await Comment.create(newComment);
             return res.status(200).json("comment has been created");
-        });
-    })
+        })
+    } catch (error) {
+        if (err) return res.status(500).json(err);
+    }
+}
 
-};
+
 
 
 module.exports = {
