@@ -1,8 +1,10 @@
 const express = require("express");
-const { addPost, deletePost, getPosts } = require("../controllers/post.js");
+const { relationshipController } = require("../controllers");
+const verifyToken = require("../middleware/verifyToken");
 const router = express.Router();
-router.get('/', getPosts);
-router.post('/', addPost);
-router.delete('/:postId', deletePost);
+router.get('/follower', verifyToken, relationshipController.getFollower);
+router.get('/followed', verifyToken, relationshipController.getFollowed);
+router.post('/', verifyToken, relationshipController.addFollow);
+router.delete('/', verifyToken, relationshipController.deleteFollow);
 
 module.exports = router;

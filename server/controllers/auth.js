@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const moment = require("moment/moment.js");
 const { User } = require("../models");
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
     const { username } = req.body
     try {
         const user = await User.findOne({ where: { username } })
@@ -15,18 +15,18 @@ const register = async (req, res) => {
         await User.create(newUser)
         return res.status(200).json("User has been created.")
 
-    } catch (error) {
-        if (error) return res.status(500).json(error);
+    } catch (err) {
+        next(err);
     }
 
 }
-const login = async (req, res) => {
+const login = async (req, res, next) => {
     const { username } = req.body;
     try {
         const user = await User.findOne({ where: { username: username } });
-        if (!user) return res.status(404).json("User not found!")
+        if (!user) next({ message: 'user not found!', statusCode: 404 })
         const checkPassword = bcrypt.compareSync(req.body.password, user.password)
-        if (!checkPassword) return res.status(400).json("Wrong password of username!")
+        if (!checkPassword) next({ message: 'Wrong password of username!', statusCode: 400 })
         const token = jwt.sign({ id: user.id }, "secretKey");
         const { password, ...other } = user.dataValues;
         res.cookie("accessToken", token, {
@@ -35,14 +35,13 @@ const login = async (req, res) => {
         }).status(200).json(other)
 
     } catch (err) {
-
-        if (err) return res.status(500).json(err);
+        next(err);
     }
 
 
 
 }
-const logout = (req, res) => {
+const logout = async (req, res, next) => {
     res.clearCookie("accessToken", {
         secure: true,
         sameSite: "none"

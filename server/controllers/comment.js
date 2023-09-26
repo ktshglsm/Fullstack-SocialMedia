@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { Comment, User } = require("../models")
 
 
-const getComments = async (req, res) => {
+const getComments = async (req, res, next) => {
     const { postId } = req.query
     try {
         const comments = await Comment.findAll({
@@ -20,21 +20,18 @@ const getComments = async (req, res) => {
         })
         return res.status(200).json(comments);
     } catch (error) {
-        if (error) return res.status(500).json(error);
+        next(error);
     }
 };
-const addComment = async (req, res) => {
+const addComment = async (req, res, next) => {
     try {
-        const token = req.cookies.accessToken;
-        if (!token) return res.status(401).json("Not logged in!");
-        jwt.verify(token, "secretKey", async (err, userInfo) => {
-            if (err) return res.status(403).json("Token is not valid!");
-            const newComment = { ...req.body, userId: userInfo.id }
-            await Comment.create(newComment);
-            return res.status(200).json("comment has been created");
-        })
+
+        const newComment = { ...req.body }
+        await Comment.create(newComment);
+        return res.status(200).json("comment has been created");
+
     } catch (error) {
-        if (err) return res.status(500).json(err);
+        next(error);
     }
 }
 

@@ -1,47 +1,65 @@
 const moment = require("moment/moment.js");
 const { db } = require("../connect.js");
 const jwt = require("jsonwebtoken");
+const { Op } = require('sequelize');
+const { Post, Relationship, User } = require("../models/index.js");
 
-const getPosts = (req, res) => {
-    const token = req.cookies.accessToken;
-    if (!token) return res.status(401).json("Not logged in!");
-    jwt.verify(token, "secretKey", (err, userInfo) => {
-        if (err) return res.status(403).json("Token is not valid!");
+const getPosts = async (req, res, next) => {
+    const { userId } = req.body
+    try {
+        const posts = await Post.findAll({
+            include:
+            {
+                model: User, attributes: ['name', 'profilePic'],
+                include: {
+                    model: Relationship,
+                    as: 'follower',
+                    attributes: [],
+                    where: {
+                        followerUser: userId,
+                    },
+                    required: false,
+                }
+            },
+            where: {
+                [Op.or]: [
+                    { userId },
+                    { '$User->follower.followerUser$': userId },
+                ],
+            },
+            order: [['createdAt', 'DESC']],
+        })
+
         const q = `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (p.userId = u.id)
         LEFT JOIN relationships AS r ON (p.userId = r.followedUser) WHERE r.followerUser = ? OR p.userId = ? ORDER BY p.createdAt DESC`;
-        db.query(q, [userInfo.id, userInfo.id], (err, data) => {
-            if (err) return res.status(500).json(err);
-            return res.status(200).json(data);
-        });
-    });
+        return res.status(200).json(posts);
+
+    } catch (error) {
+        next(error);
+    }
 };
-const addPost = (req, res) => {
-    const token = req.cookies.accessToken;
-    if (!token) return res.status(401).json("Not logged in!");
-    jwt.verify(token, "secretKey", (err, userInfo) => {
-        if (err) return res.status(403).json("Token is not valid!");
-        const q = "INSERT INTO posts(`desc`, `img`, `createdAt`, `userId`) VALUES (?)";
-        const values = [req.body.desc, req.body.img, moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"), userInfo.id]
-        db.query(q, [values], (err, data) => {
-            if (err) return res.status(500).json(err);
-            return res.status(200).json("post has been created");
-        });
-    });
+const addPost = async (req, res, next) => {
+    try {
+        await Post.create(req.body);
+        return res.status(200).json("post has been created");
+    } catch (error) {
+        next(error);
+    }
+
 };
 
-const deletePost = (req, res) => {
-    const token = req.cookies.accessToken;
-    if (!token) return res.status(401).json("Not logged in!");
-    jwt.verify(token, "secretKey", (err, userInfo) => {
-        if (err) return res.status(403).json("Token is not valid!");
-        const q = "DELETE FROM posts WHERE id=? and userId=?";
-        const values = [req.params.postId, userInfo.id]
-        db.query(q, [values], (err, data) => {
-            if (err) return res.status(500).json(err);
-            if (data.affectedRows > 0) return res.status(200).json("post has been deleted");
-            return res.status(403).json('you just only delete your post')
-        });
-    });
+const deletePost = async (req, res, next) => {
+    const { userId } = req.body;
+    const { postId: id } = req.params;
+
+    try {
+        const data = await Post.destroy({ where: { userId, id } });
+        if (data) return res.status(200).json("post has been deleted");
+        return res.status(403).json('you just only delete your post')
+    } catch (error) {
+        next(error);
+    }
+
 };
 
 
