@@ -13,10 +13,10 @@ const getPosts = async (req, res, next) => {
                 model: User, attributes: ['name', 'profilePic'],
                 include: {
                     model: Relationship,
-                    as: 'follower',
+                    as: 'followed',
                     attributes: [],
                     where: {
-                        followerUser: userId,
+                        followedUser: { [Op.col]: 'Post.userId' }
                     },
                     required: false,
                 }
@@ -24,7 +24,7 @@ const getPosts = async (req, res, next) => {
             where: {
                 [Op.or]: [
                     { userId },
-                    { '$User->follower.followerUser$': userId },
+                    { '$User->followed.followerUser$': userId },
                 ],
             },
             order: [['createdAt', 'DESC']],

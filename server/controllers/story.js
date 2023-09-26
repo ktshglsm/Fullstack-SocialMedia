@@ -10,10 +10,10 @@ const getStories = async (req, res, next) => {
                 attributes: ["name", "profilePic"],
                 include: {
                     model: Relationship,
-                    as: "follower",
+                    as: "followed",
                     attributes: [],
                     where: {
-                        followerUser: userId
+                        followedUser: { [Op.col]: 'Story.userId' }
                     },
                     required: false
                 }
@@ -21,10 +21,11 @@ const getStories = async (req, res, next) => {
             where: {
                 [Op.or]: [
                     { userId },
-                    { '$User->follower.followerUser$': userId },
+                    { '$User->followed.followerUser$': userId },
                 ],
             }
         })
+
         return res.status(200).json(stories)
     } catch (error) {
         next(error);
