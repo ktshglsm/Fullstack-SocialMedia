@@ -12,9 +12,7 @@ import {
   Outlet,
   RouterProvider,
 } from "react-router-dom";
-import { useContext } from "react";
-import { DarkModeContext } from "./context/darkModeContext";
-import { AuthContext } from "./context/authContext";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useSelector } from "react-redux";
 function App() {
