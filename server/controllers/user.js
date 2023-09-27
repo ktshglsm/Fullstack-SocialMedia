@@ -9,8 +9,8 @@ const getAllUser = async (req, res, next) => {
 }
 
 const getUser = async (req, res, next) => {
+    const { userId } = req.params;
     try {
-        const userId = req.params.userId;
         const user = await User.findByPk(userId);
         if (!user) next({ message: 'Người dùng không tồn tại', statusCode: 404 })
         res.status(200).json(user);
@@ -21,7 +21,7 @@ const getUser = async (req, res, next) => {
 
 }
 const updateUser = async (req, res, next) => {
-    const userId = req.body.userId;
+    const { userId } = req.body;
     try {
         const user = await User.findByPk(userId);
         if (!user) {

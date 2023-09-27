@@ -1,7 +1,5 @@
-const { db } = require("../connect.js");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
-const moment = require("moment/moment.js");
 const { User } = require("../models");
 
 const register = async (req, res, next) => {
@@ -15,8 +13,8 @@ const register = async (req, res, next) => {
         await User.create(newUser)
         return res.status(200).json("User has been created.")
 
-    } catch (err) {
-        next(err);
+    } catch (error) {
+        next(error);
     }
 
 }
@@ -34,8 +32,8 @@ const login = async (req, res, next) => {
             expires: new Date(Date.now() + 1000 * 60 * 60)
         }).status(200).json(other)
 
-    } catch (err) {
-        next(err);
+    } catch (error) {
+        next(error);
     }
 
 

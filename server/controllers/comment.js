@@ -1,6 +1,3 @@
-const moment = require("moment/moment.js");
-const { db } = require("../connect.js");
-const jwt = require("jsonwebtoken");
 const { Comment, User } = require("../models")
 
 
@@ -25,9 +22,7 @@ const getComments = async (req, res, next) => {
 };
 const addComment = async (req, res, next) => {
     try {
-
-        const newComment = { ...req.body }
-        await Comment.create(newComment);
+        await Comment.create(req.body);
         return res.status(200).json("comment has been created");
 
     } catch (error) {

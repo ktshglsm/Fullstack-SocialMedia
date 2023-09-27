@@ -23,7 +23,8 @@ const getStories = async (req, res, next) => {
                     { userId },
                     { '$User->followed.followerUser$': userId },
                 ],
-            }
+            },
+            order: [['createdAt', 'DESC']],
         })
 
         return res.status(200).json(stories)
