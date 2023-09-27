@@ -15,7 +15,6 @@ import { useSelector } from "react-redux";
 const Post = ({ post }) => {
   const currentUser = useSelector((state) => state.user.currentUser);
   const [commentOpen, setCommentOpen] = useState(false);
-
   const {
     isLoading: likeLoading,
     error: likeError,

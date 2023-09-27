@@ -45,10 +45,14 @@ const getPostsById = async (req, res, next) => {
     try {
         const posts = await Post.findAll(
             {
-                include: {
-                    model: User,
-                    attributes: ['name', 'profilePic']
-                },
+                include: [
+                    {
+                        model: User,
+                        attributes: ['name', 'profilePic']
+                    }, {
+                        model: Comment, attributes: ['id']
+                    }
+                ],
                 where: { userId },
                 order: [['createdAt', 'DESC']],
             }

@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, Relationship } = require("../models");
 const getAllUser = async (req, res, next) => {
     try {
         const users = await User.findAll();
@@ -9,9 +9,17 @@ const getAllUser = async (req, res, next) => {
 }
 
 const getUser = async (req, res, next) => {
-    const { userId } = req.params;
+    const { userId: id } = req.params;
     try {
-        const user = await User.findByPk(userId);
+        const user = await User.findOne({
+            where: { id },
+            include: {
+                model: Relationship,
+                as: 'followed',
+                attributes: ['followerUser'],
+            }
+        });
+
         if (!user) next({ message: 'Người dùng không tồn tại', statusCode: 404 })
         res.status(200).json(user);
     } catch (error) {

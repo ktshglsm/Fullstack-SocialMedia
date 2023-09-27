@@ -12,7 +12,7 @@ const addFollow = async (req, res, next) => {
 const deleteFollow = async (req, res, next) => {
     const { userId: followerUser, followedUser } = req.body;
     try {
-        await Relationship.destroy({ followerUser, followedUser });
+        await Relationship.destroy({ where: { followerUser, followedUser } });
         return res.status(200).json("unFollowed successfully")
     } catch (error) {
         next(error);

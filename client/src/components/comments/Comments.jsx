@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const Comments = ({ postId }) => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -48,7 +49,9 @@ const Comments = ({ postId }) => {
         <div className="comment">
           <img src={comment.User.profilePic} alt="" />
           <div className="info">
-            <span>{comment.User.name}</span>
+            <Link to={"/profile/" + comment.userId}>
+              <span>{comment.User.name}</span>
+            </Link>
             <p>{comment.desc}</p>
           </div>
           <span className="date">{moment(comment.createdAt).fromNow()}</span>

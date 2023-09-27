@@ -105,11 +105,16 @@
           }
           button {
             border: none;
-            background-color: #5271ff;
             color: white;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
+            &.follow {
+              background-color: #5271ff;
+            }
+            &.un-follow {
+              background-color: rgb(252, 18, 18);
+            }
           }
         }
 

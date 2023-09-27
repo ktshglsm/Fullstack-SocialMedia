@@ -11,12 +11,18 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts";
 import { useLocation } from "react-router-dom";
 import { makeRequest } from "../../axios";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
+  const currentUser = useSelector((state) => state.user.currentUser);
   const location = useLocation();
   const userId = location.pathname.split("/")[2];
-  const { isLoading, error, data } = useQuery(["user", userId], () =>
+  const {
+    isLoading: userLoading,
+    error: userError,
+    data: userData,
+  } = useQuery(["user", userId], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
       window.scrollTo({
         top: 0,
@@ -25,11 +31,35 @@ const Profile = () => {
       return res.data;
     })
   );
+  const {
+    isLoading: relationshipLoading,
+    error: relationshipError,
+    data: relationshipData,
+  } = useQuery(["relationships"], () =>
+    makeRequest.get("/relationships/followed").then((res) => {
+      return res.data;
+    })
+  );
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    () => {
+      return relationshipData?.includes(parseInt(userId))
+        ? makeRequest.delete("relationships", {
+            data: { followedUser: userId },
+          })
+        : makeRequest.post("relationships", { followedUser: userId });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("relationships");
+      },
+    }
+  );
   return (
     <div className="profile">
       <div className="images">
-        <img src={data?.coverPic} alt="" className="cover" />
-        <img src={data?.profilePic} alt="" className="profilePic" />
+        <img src={userData?.coverPic} alt="" className="cover" />
+        <img src={userData?.profilePic} alt="" className="profilePic" />
       </div>
       <div className="profileContainer">
         <div className="uInfo">
@@ -51,18 +81,26 @@ const Profile = () => {
             </a>
           </div>
           <div className="center">
-            <span>{data?.name}</span>
+            <span>{userData?.name}</span>
             <div className="info">
               <div className="item">
                 <PlaceIcon />
-                <span>{data?.city || "Viet Nam"}</span>
+                <span>{userData?.city || "Viet Nam"}</span>
               </div>
               <div className="item">
                 <LanguageIcon />
-                <span>{data?.website || "facebook.com"}</span>
+                <span>{userData?.website || "facebook.com"}</span>
               </div>
             </div>
-            <button>follow</button>
+            {relationshipData?.includes(parseInt(userId)) ? (
+              <button className="un-follow" onClick={mutation.mutate}>
+                Un Follow
+              </button>
+            ) : (
+              <button className="follow" onClick={mutation.mutate}>
+                Follow
+              </button>
+            )}
           </div>
           <div className="right">
             <EmailOutlinedIcon />
