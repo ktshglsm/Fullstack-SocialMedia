@@ -31,7 +31,7 @@ const Share = () => {
     {
       onSuccess: () => {
         // Invalidate and refetch
-        queryClient.invalidateQueries(["posts"]);
+        queryClient.invalidateQueries("posts");
       },
     }
   );

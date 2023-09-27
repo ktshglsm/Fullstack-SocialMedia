@@ -13,6 +13,7 @@ import { useLocation } from "react-router-dom";
 import { makeRequest } from "../../axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const Profile = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -24,10 +25,6 @@ const Profile = () => {
     data: userData,
   } = useQuery(["user", userId], () =>
     makeRequest.get("/users/find/" + userId).then((res) => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
       return res.data;
     })
   );
@@ -55,6 +52,12 @@ const Profile = () => {
       },
     }
   );
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [userId]);
   return (
     <div className="profile">
       <div className="images">
