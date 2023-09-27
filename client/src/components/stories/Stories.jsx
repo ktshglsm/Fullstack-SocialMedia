@@ -1,32 +1,15 @@
+import { useQuery } from "@tanstack/react-query";
 import "./stories.scss";
 import { useSelector } from "react-redux";
+import { makeRequest } from "../../axios";
 
 const Stories = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
-
-  //TEMPORARY
-  const stories = [
-    {
-      id: 1,
-      name: "John Doe",
-      img: "https://i.ex-cdn.com/mgn.vn/files/content/2022/06/17/muc-truy-na-chopper-1222.jpg",
-    },
-    {
-      id: 2,
-      name: "John Doe",
-      img: "https://i.ex-cdn.com/mgn.vn/files/content/2022/06/17/muc-truy-na-chopper-1222.jpg",
-    },
-    {
-      id: 3,
-      name: "John Doe",
-      img: "https://i.ex-cdn.com/mgn.vn/files/content/2022/06/17/muc-truy-na-chopper-1222.jpg",
-    },
-    {
-      id: 4,
-      name: "John Doe",
-      img: "https://i.ex-cdn.com/mgn.vn/files/content/2022/06/17/muc-truy-na-chopper-1222.jpg",
-    },
-  ];
+  const { isLoading, error, data } = useQuery(["stories"], () =>
+    makeRequest.get("/stories").then((res) => {
+      return res.data;
+    })
+  );
 
   return (
     <div className="stories">
@@ -35,10 +18,16 @@ const Stories = () => {
         <span>{currentUser.name}</span>
         <button>+</button>
       </div>
-      {stories.map((story) => (
+      {data?.map((story) => (
         <div className="story" key={story.id}>
-          <img src={story.img} alt="" />
-          <span>{story.name}</span>
+          <img
+            src={
+              story.img ||
+              "https://i.pinimg.com/736x/6e/42/95/6e42951c52f0fa3e9fda558ef4e6b301.jpg "
+            }
+            alt=""
+          />
+          <span>{story.User.name}</span>
         </div>
       ))}
     </div>

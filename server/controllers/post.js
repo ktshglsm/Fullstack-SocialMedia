@@ -1,23 +1,28 @@
 const { Op } = require('sequelize');
-const { Post, Relationship, User } = require("../models/index.js");
+const { Post, Relationship, User, Comment } = require("../models/index.js");
 
 const getPosts = async (req, res, next) => {
     const { userId } = req.body
     try {
         const posts = await Post.findAll({
-            include:
-            {
-                model: User, attributes: ['name', 'profilePic'],
-                include: {
-                    model: Relationship,
-                    as: 'followed',
-                    attributes: [],
-                    where: {
-                        followedUser: { [Op.col]: 'Post.userId' }
+            include: [
+                {
+                    model: User, attributes: ['name', 'profilePic'],
+                    include: {
+                        model: Relationship,
+                        as: 'followed',
+                        attributes: [],
+                        where: {
+                            followedUser: { [Op.col]: 'Post.userId' }
+                        },
+                        required: false,
                     },
-                    required: false,
+                },
+                {
+                    model: Comment, attributes: ['id']
                 }
-            },
+
+            ],
             where: {
                 [Op.or]: [
                     { userId },
@@ -34,6 +39,25 @@ const getPosts = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+};
+const getPostsById = async (req, res, next) => {
+    const { userId } = req.params
+    try {
+        const posts = await Post.findAll(
+            {
+                include: {
+                    model: User,
+                    attributes: ['name', 'profilePic']
+                },
+                where: { userId },
+                order: [['createdAt', 'DESC']],
+            }
+        )
+        return res.status(200).json(posts);
+    } catch (error) {
+        next(error);
+    }
+
 };
 const addPost = async (req, res, next) => {
     try {
@@ -61,5 +85,5 @@ const deletePost = async (req, res, next) => {
 
 
 module.exports = {
-    getPosts, addPost, deletePost
+    getPosts, addPost, deletePost, getPostsById
 };

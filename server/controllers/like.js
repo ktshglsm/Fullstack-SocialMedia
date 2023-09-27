@@ -26,6 +26,7 @@ const addLike = async (req, res, next) => {
 
 const deleteLike = async (req, res, next) => {
     const { postId, userId } = req.body
+    console.log(req.body);
     try {
         await Like.destroy({ where: { userId, postId } });
         return res.status(200).json('dislike success');

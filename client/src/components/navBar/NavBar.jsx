@@ -17,17 +17,12 @@ import { logout, toggle } from "../../redux/apiCall";
 const NavBar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
   const darkMode = useSelector((state) => state.darkMode.currentDarkMode);
-  console.log(darkMode);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  useEffect(() => {
-    if (currentUser) {
-      navigate("/");
-    }
-  }, [currentUser]);
 
   const handleLogout = () => {
     logout(dispatch);
+    navigate("/");
   };
 
   return (
@@ -36,7 +31,10 @@ const NavBar = () => {
         <Link to="/">
           <span>Social Media</span>
         </Link>
-        <HomeOutlined />
+        <Link to="/">
+          <HomeOutlined />
+        </Link>
+
         {darkMode ? (
           <DarkModeOutlined onClick={() => toggle(dispatch)} />
         ) : (

@@ -5,6 +5,13 @@
   gap: 10px;
   height: 250px;
   margin-bottom: 30px;
+  overflow-x: scroll;
+  width: calc(52vw - 20px);
+  position: relative;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   @include tablet {
     height: 220px;
     overflow-x: scroll;
@@ -21,13 +28,13 @@
       display: none;
     }
   }
-  
 
   .story {
-    flex: 1;
     border-radius: 10px;
     overflow: hidden;
     position: relative;
+    width: 160px;
+    flex: none;
     @include tablet {
       flex: none;
       width: 140px;
@@ -37,7 +44,7 @@
       flex: none;
       width: 100px;
     }
-    
+
     img {
       width: 100%;
       height: 100%;

@@ -9,7 +9,7 @@ const Comments = ({ postId }) => {
   const currentUser = useSelector((state) => state.user.currentUser);
   const [desc, setDesc] = useState("");
 
-  const { isLoading, error, data } = useQuery(["comments"], () =>
+  const { isLoading, error, data } = useQuery(["comments", postId], () =>
     makeRequest.get("/comments?postId=" + postId).then((res) => {
       return res.data;
     })
@@ -22,6 +22,7 @@ const Comments = ({ postId }) => {
     {
       onSuccess: () => {
         // Invalidate and refetch
+        queryClient.invalidateQueries(["posts"]);
         queryClient.invalidateQueries(["comments"]);
       },
     }
@@ -45,9 +46,9 @@ const Comments = ({ postId }) => {
       </div>
       {data?.map((comment) => (
         <div className="comment">
-          <img src={comment.profilePic} alt="" />
+          <img src={comment.User.profilePic} alt="" />
           <div className="info">
-            <span>{comment.name}</span>
+            <span>{comment.User.name}</span>
             <p>{comment.desc}</p>
           </div>
           <span className="date">{moment(comment.createdAt).fromNow()}</span>

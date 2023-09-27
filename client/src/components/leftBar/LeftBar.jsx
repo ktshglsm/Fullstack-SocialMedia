@@ -13,6 +13,7 @@ import Tutorials from "../../assets/11.png";
 import Courses from "../../assets/12.png";
 import Fund from "../../assets/13.png";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const LeftBar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -21,10 +22,12 @@ const LeftBar = () => {
     <div className="leftBar">
       <div className="container">
         <div className="menu">
-          <div className="user">
-            <img src={currentUser.profilePic} alt="" />
-            <span>{currentUser.name}</span>
-          </div>
+          <Link to="/">
+            <div className="user">
+              <img src={currentUser.profilePic} alt="" />
+              <span>{currentUser.name}</span>
+            </div>
+          </Link>
           <div className="item">
             <img src={Friends} alt="" />
             <span>Friends</span>

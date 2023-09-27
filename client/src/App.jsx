@@ -5,7 +5,7 @@ import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
-import './style.scss'
+import "./style.scss";
 import {
   createBrowserRouter,
   Navigate,
@@ -13,41 +13,36 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 function App() {
-
-  const darkMode = useSelector((state) => state.darkMode.currentDarkMode)
+  const darkMode = useSelector((state) => state.darkMode.currentDarkMode);
   const currentUser = useSelector((state) => state.user.currentUser);
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
   const Layout = () => {
     return (
       <QueryClientProvider client={queryClient}>
-        <div className={`theme-${darkMode ? 'dark' : 'light'}`}>
+        <div className={`theme-${darkMode ? "dark" : "light"}`}>
           <NavBar />
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: "flex" }}>
             <LeftBar />
-            <div style={{ flex: '6' }}>
-
+            <div style={{ flex: "6" }}>
               <Outlet />
             </div>
             <RightBar />
           </div>
         </div>
       </QueryClientProvider>
-    )
-  }
-
+    );
+  };
 
   const ProtectedRoute = ({ children }) => {
     if (!currentUser) {
-      return <Navigate to='/login' />
+      return <Navigate to="/login" />;
     }
 
     return children;
-
-
-  }
+  };
 
   const router = createBrowserRouter([
     {
@@ -60,15 +55,16 @@ function App() {
     },
     {
       path: "/",
-      element:
+      element: (
         <ProtectedRoute>
           <Layout />
-        </ProtectedRoute>,
+        </ProtectedRoute>
+      ),
       children: [
         { path: "/", element: <Home /> },
         { path: "/profile/:id", element: <Profile /> },
-      ]
-    }
+      ],
+    },
   ]);
   return (
     <div>
