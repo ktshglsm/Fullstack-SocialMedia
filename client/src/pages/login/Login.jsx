@@ -1,16 +1,18 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../context/authContext";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./login.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../redux/apiCall";
 
 const Login = () => {
-  const { login, currentUser } = useContext(AuthContext);
+  const user = useSelector((state) => state.user.currentUser);
   const [inputs, setInputs] = useState({
     username: "",
     password: "",
   });
   const [err, setErr] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -18,16 +20,17 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await login(inputs);
+      await login(dispatch, inputs);
     } catch (error) {
       setErr(error.response.data);
     }
   };
+
   useEffect(() => {
-    if (currentUser) {
+    if (user) {
       navigate("/");
     }
-  }, [currentUser]);
+  }, [user]);
 
   return (
     <div className="login">

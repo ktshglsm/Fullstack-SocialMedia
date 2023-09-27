@@ -1,12 +1,12 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import "./comments.scss";
-import { AuthContext } from "../../context/authContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
 const Comments = ({ postId }) => {
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [desc, setDesc] = useState("");
 
   const { isLoading, error, data } = useQuery(["comments"], () =>

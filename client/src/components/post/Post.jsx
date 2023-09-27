@@ -6,15 +6,15 @@ import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link } from "react-router-dom";
 import Comments from "../comments/Comments";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import moment from "moment";
 import { makeRequest } from "../../axios";
 import { useQuery } from "@tanstack/react-query";
-import { AuthContext } from "../../context/authContext";
+import { useSelector } from "react-redux";
 
 const Post = ({ post }) => {
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [commentOpen, setCommentOpen] = useState(false);
-  const { currentUser } = useContext(AuthContext);
 
   const { isLoading, error, data } = useQuery(["likes", post.id], () =>
     makeRequest.get("/likes?postId=" + post.id).then((res) => {

@@ -12,11 +12,10 @@ import Messages from "../../assets/10.png";
 import Tutorials from "../../assets/11.png";
 import Courses from "../../assets/12.png";
 import Fund from "../../assets/13.png";
-import { useContext } from "react";
-import { AuthContext } from "../../context/authContext";
+import { useSelector } from "react-redux";
 
 const LeftBar = () => {
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   return (
     <div className="leftBar">

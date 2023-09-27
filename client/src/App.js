@@ -16,10 +16,11 @@ import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/authContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { useSelector } from "react-redux";
 function App() {
 
-  const { darkMode } = useContext(DarkModeContext)
-  const { currentUser } = useContext(AuthContext);
+  const darkMode = useSelector((state) => state.darkMode.currentDarkMode)
+  const currentUser = useSelector((state) => state.user.currentUser);
   const queryClient = new QueryClient()
   const Layout = () => {
     return (
