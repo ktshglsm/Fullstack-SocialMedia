@@ -27,6 +27,7 @@
         padding: 20px;
         margin-bottom: 20px;
         background-color: themed("bg");
+        border-radius: 18px;
         span {
           color: gray;
         }
@@ -74,6 +75,7 @@
               padding: 5px;
               color: #fff;
               cursor: pointer;
+              border-radius: 5px;
               &:first-child {
                 background-color: blueviolet;
               }

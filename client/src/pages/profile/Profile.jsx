@@ -8,22 +8,61 @@ import PlaceIcon from "@mui/icons-material/Place";
 import LanguageIcon from "@mui/icons-material/Language";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Posts from "../../components/posts/Posts"
+import Posts from "../../components/posts/Posts";
+import { useLocation } from "react-router-dom";
+import { makeRequest } from "../../axios";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const Profile = () => {
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const location = useLocation();
+  const userId = location.pathname.split("/")[2];
+  const {
+    isLoading: userLoading,
+    error: userError,
+    data: userData,
+  } = useQuery(["user", userId], () =>
+    makeRequest.get("/users/find/" + userId).then((res) => {
+      return res.data;
+    })
+  );
+  const {
+    isLoading: relationshipLoading,
+    error: relationshipError,
+    data: relationshipData,
+  } = useQuery(["relationships"], () =>
+    makeRequest.get("/relationships/followed").then((res) => {
+      return res.data;
+    })
+  );
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    () => {
+      return relationshipData?.includes(parseInt(userId))
+        ? makeRequest.delete("relationships", {
+            data: { followedUser: userId },
+          })
+        : makeRequest.post("relationships", { followedUser: userId });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("relationships");
+      },
+    }
+  );
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [userId]);
   return (
     <div className="profile">
       <div className="images">
-        <img
-          src="https://images.pexels.com/photos/13440765/pexels-photo-13440765.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          alt=""
-          className="cover"
-        />
-        <img
-          src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
-          alt=""
-          className="profilePic"
-        />
+        <img src={userData?.coverPic} alt="" className="cover" />
+        <img src={userData?.profilePic} alt="" className="profilePic" />
       </div>
       <div className="profileContainer">
         <div className="uInfo">
@@ -45,25 +84,37 @@ const Profile = () => {
             </a>
           </div>
           <div className="center">
-            <span>Jane Doe</span>
+            <span>{userData?.name}</span>
             <div className="info">
               <div className="item">
                 <PlaceIcon />
-                <span>USA</span>
+                <span>{userData?.city || "Viet Nam"}</span>
               </div>
               <div className="item">
                 <LanguageIcon />
-                <span>lama.dev</span>
+                <span>{userData?.website || "facebook.com"}</span>
               </div>
             </div>
-            <button>follow</button>
+            {!(parseInt(userId) === currentUser.id) ? (
+              relationshipData?.includes(parseInt(userId)) ? (
+                <button className="un-follow" onClick={mutation.mutate}>
+                  Un Follow
+                </button>
+              ) : (
+                <button className="follow" onClick={mutation.mutate}>
+                  Follow
+                </button>
+              )
+            ) : (
+              <button className="update">Update Profile</button>
+            )}
           </div>
           <div className="right">
             <EmailOutlinedIcon />
             <MoreVertIcon />
           </div>
         </div>
-      <Posts/>
+        <Posts />
       </div>
     </div>
   );

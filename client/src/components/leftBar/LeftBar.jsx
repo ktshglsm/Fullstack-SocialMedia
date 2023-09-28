@@ -12,20 +12,22 @@ import Messages from "../../assets/10.png";
 import Tutorials from "../../assets/11.png";
 import Courses from "../../assets/12.png";
 import Fund from "../../assets/13.png";
-import { useContext } from "react";
-import { AuthContext } from "../../context/authContext";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const LeftBar = () => {
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   return (
     <div className="leftBar">
       <div className="container">
         <div className="menu">
-          <div className="user">
-            <img src={currentUser.profilePic} alt="" />
-            <span>{currentUser.name}</span>
-          </div>
+          <Link to={"/profile/" + currentUser.id}>
+            <div className="user">
+              <img src={currentUser.profilePic} alt="" />
+              <span>{currentUser.name}</span>
+            </div>
+          </Link>
           <div className="item">
             <img src={Friends} alt="" />
             <span>Friends</span>

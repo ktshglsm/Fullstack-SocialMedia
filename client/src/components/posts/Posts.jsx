@@ -2,14 +2,20 @@ import { useQuery } from "@tanstack/react-query";
 import Post from "../post/Post";
 import "./posts.scss";
 import { makeRequest } from "../../axios";
+import { useLocation } from "react-router-dom";
 
 const Posts = () => {
-  const { isLoading, error, data } = useQuery(["posts"], () =>
-    makeRequest.get("/posts").then((res) => {
-      return res.data;
-    })
+  const location = useLocation();
+  const userId = location.pathname.split("/")[2];
+  const { isLoading, error, data } = useQuery(["posts", userId], () =>
+    userId
+      ? makeRequest.get("/posts/" + userId).then((res) => {
+          return res.data;
+        })
+      : makeRequest.get("/posts").then((res) => {
+          return res.data;
+        })
   );
-  console.log(data);
   return (
     <div className="posts">
       {data?.map((post) => (

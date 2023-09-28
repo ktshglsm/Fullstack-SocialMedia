@@ -2,11 +2,12 @@ import "./share.scss";
 import Image from "../../assets/img.png";
 import Map from "../../assets/map.png";
 import Friend from "../../assets/friend.png";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../context/authContext";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
+import { useSelector } from "react-redux";
 const Share = () => {
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
 
@@ -16,12 +17,10 @@ const Share = () => {
       formData.append("file", file);
       const res = await makeRequest.post("/upload", formData);
       return res.data;
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     }
   };
-
-  const { currentUser } = useContext(AuthContext);
 
   const queryClient = useQueryClient();
 
@@ -32,7 +31,7 @@ const Share = () => {
     {
       onSuccess: () => {
         // Invalidate and refetch
-        queryClient.invalidateQueries(["posts"]);
+        queryClient.invalidateQueries("posts");
       },
     }
   );

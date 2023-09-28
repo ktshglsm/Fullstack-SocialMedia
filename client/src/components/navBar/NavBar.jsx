@@ -9,36 +9,69 @@ import {
   WbSunnyOutlined,
 } from "@mui/icons-material";
 import "./navBar.scss";
-import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { DarkModeContext } from "../../context/darkModeContext";
-import { AuthContext } from "../../context/authContext";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, toggle } from "../../redux/apiCall";
+import { useQuery } from "@tanstack/react-query";
+import { makeRequest } from "../../axios";
 
 const NavBar = () => {
-  const { currentUser, logout } = useContext(AuthContext);
-
-  const { darkMode, toggle } = useContext(DarkModeContext);
-
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const darkMode = useSelector((state) => state.darkMode.currentDarkMode);
+  const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isLoading, error, data } = useQuery(
+    ["userList", search],
+    () =>
+      search &&
+      makeRequest.get("/users/search?search=" + search).then((res) => {
+        return res.data;
+      })
+  );
   const handleLogout = () => {
-    logout();
+    logout(dispatch);
+    navigate("/");
   };
-
+  const handleClickUser = (userId) => {
+    navigate("/profile/" + userId);
+    setSearch("");
+  };
   return (
     <div className="navBar">
       <div className="left">
         <Link to="/">
           <span>Social Media</span>
         </Link>
-        <HomeOutlined />
+        <Link to="/">
+          <HomeOutlined />
+        </Link>
+
         {darkMode ? (
-          <DarkModeOutlined onClick={toggle} />
+          <DarkModeOutlined onClick={() => toggle(dispatch)} />
         ) : (
-          <WbSunnyOutlined onClick={toggle} />
+          <WbSunnyOutlined onClick={() => toggle(dispatch)} />
         )}
         <GridViewOutlined />
         <div className="search">
           <SearchOutlined />
-          <input type="text " placeholder="Search...." />
+          <input
+            type="text "
+            placeholder="Search...."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {data && data.length > 0 && (
+            <div className="list">
+              {data.map((user) => (
+                <div className="item" onClick={() => handleClickUser(user.id)}>
+                  <img src={user.profilePic} alt="" />
+                  <span>{user.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <div className="right">

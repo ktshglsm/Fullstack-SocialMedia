@@ -1,15 +1,16 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import "./comments.scss";
-import { AuthContext } from "../../context/authContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const Comments = ({ postId }) => {
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [desc, setDesc] = useState("");
 
-  const { isLoading, error, data } = useQuery(["comments"], () =>
+  const { isLoading, error, data } = useQuery(["comments", postId], () =>
     makeRequest.get("/comments?postId=" + postId).then((res) => {
       return res.data;
     })
@@ -22,7 +23,7 @@ const Comments = ({ postId }) => {
     {
       onSuccess: () => {
         // Invalidate and refetch
-        queryClient.invalidateQueries(["comments"]);
+        queryClient.invalidateQueries("posts", "comments");
       },
     }
   );
@@ -45,9 +46,11 @@ const Comments = ({ postId }) => {
       </div>
       {data?.map((comment) => (
         <div className="comment">
-          <img src={comment.profilePic} alt="" />
+          <img src={comment.User.profilePic} alt="" />
           <div className="info">
-            <span>{comment.name}</span>
+            <Link to={"/profile/" + comment.userId}>
+              <span>{comment.User.name}</span>
+            </Link>
             <p>{comment.desc}</p>
           </div>
           <span className="date">{moment(comment.createdAt).fromNow()}</span>

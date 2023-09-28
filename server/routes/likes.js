@@ -1,9 +1,10 @@
 const express = require("express");
-const { addLike, deleteLike, getLikes } = require("../controllers/like.js");
+const { likeController } = require("../controllers");
+const verifyToken = require("../middleware/verifyToken");
 const router = express.Router();
-router.get('/', getLikes);
-router.post('/', addLike);
-router.delete('/', deleteLike);
+router.get('/', likeController.getLikes);
+router.post('/', verifyToken, likeController.addLike);
+router.delete('/', verifyToken, likeController.deleteLike);
 
 
 module.exports = router;
