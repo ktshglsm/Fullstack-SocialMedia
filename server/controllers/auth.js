@@ -29,7 +29,7 @@ const login = async (req, res, next) => {
         const { password, ...other } = user.dataValues;
         res.cookie("accessToken", token, {
             httpOnly: true,
-            expires: new Date(Date.now() + 1000 * 60 * 60)
+            expires: new Date(Date.now() + 1000 * 60 * 60 * 24)
         }).status(200).json(other)
 
     } catch (error) {

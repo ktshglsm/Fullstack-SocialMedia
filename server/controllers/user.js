@@ -1,7 +1,23 @@
+const { Op } = require("sequelize");
 const { User, Relationship } = require("../models");
 const getAllUser = async (req, res, next) => {
     try {
         const users = await User.findAll();
+        res.status(200).json(users);
+    } catch (error) {
+        next(error);
+    }
+}
+const searchUsers = async (req, res, next) => {
+    const search = req.query.search;
+    try {
+        const users = await User.findAll({
+            where: {
+                name: {
+                    [Op.like]: `%${search}%`
+                }
+            }
+        })
         res.status(200).json(users);
     } catch (error) {
         next(error);
@@ -46,5 +62,5 @@ const updateUser = async (req, res, next) => {
 
 
 module.exports = {
-    getAllUser, getUser, updateUser
+    getAllUser, getUser, updateUser, searchUsers
 };

@@ -95,14 +95,18 @@ const Profile = () => {
                 <span>{userData?.website || "facebook.com"}</span>
               </div>
             </div>
-            {relationshipData?.includes(parseInt(userId)) ? (
-              <button className="un-follow" onClick={mutation.mutate}>
-                Un Follow
-              </button>
+            {!(parseInt(userId) === currentUser.id) ? (
+              relationshipData?.includes(parseInt(userId)) ? (
+                <button className="un-follow" onClick={mutation.mutate}>
+                  Un Follow
+                </button>
+              ) : (
+                <button className="follow" onClick={mutation.mutate}>
+                  Follow
+                </button>
+              )
             ) : (
-              <button className="follow" onClick={mutation.mutate}>
-                Follow
-              </button>
+              <button className="update">Update Profile</button>
             )}
           </div>
           <div className="right">

@@ -29,6 +29,7 @@
         border: 1px solid themed("border");
         border-radius: 5px;
         padding: 5px;
+        position: relative;
 
         input {
           outline: none;
@@ -41,6 +42,37 @@
           }
           @include mobile {
             display: none;
+          }
+        }
+        .list {
+          position: absolute;
+          width: 100%;
+          top: 100%;
+          left: 0;
+          padding-top: 5px;
+          background-color: #d2cfcf;
+          margin-top: 3px;
+          border-radius: 5px;
+          overflow: hidden;
+          .item {
+            &:hover {
+              background-color: #edecec;
+            }
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            img {
+              height: 40px;
+              width: 40px;
+              object-fit: cover;
+              border-radius: 50%;
+            }
+            span {
+              font-size: 16px;
+              color: #000;
+            }
           }
         }
       }
