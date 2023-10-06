@@ -1,0 +1,30 @@
+@import "../../style.scss";
+.menu-container {
+  @include themify($themes) {
+    position: absolute;
+    right: 0;
+    top: 110%;
+    border: 1px solid themed("border");
+    border-radius: 8px;
+    color: themed("textColor");
+    background-color: themed("bg");
+    overflow: hidden;
+    .option {
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      gap: 8px;
+      white-space: nowrap;
+      align-items: center;
+      justify-content: space-between;
+      svg {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      &:hover {
+        background-color: themed("bgSoft");
+      }
+    }
+  }
+}

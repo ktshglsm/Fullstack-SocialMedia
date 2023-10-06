@@ -34,16 +34,18 @@
             }
           }
         }
+        svg {
+          cursor: pointer;
+        }
       }
       .content {
         margin: 20px 0;
-        p {
-        }
+
         img {
-            width: 100%;
-            max-height: 500px;
-            object-fit: cover;
-            margin-top: 20px;
+          width: 100%;
+          max-height: 500px;
+          object-fit: cover;
+          margin-top: 20px;
         }
       }
       .info {

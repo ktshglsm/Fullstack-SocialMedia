@@ -14,7 +14,7 @@ import { useLocation } from "react-router-dom";
 import { makeRequest } from "../../axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { updateUser } from "../../redux/apiCall";
 
 const Profile = () => {
@@ -95,6 +95,20 @@ const Profile = () => {
     setProfilePic(null);
     setCoverPic(null);
   };
+  const modalRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (modalRef.current && !modalRef.current.contains(event.target)) {
+      setOpenUpdate(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -163,7 +177,7 @@ const Profile = () => {
       </div>
       {openUpdate && (
         <div className="container-full">
-          <div className="temporary">
+          <div className="temporary" ref={modalRef}>
             <Close onClick={handleCloseUpdate} />
             <form action="">
               <label htmlFor="name">Name: </label>

@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, toggle } from "../../redux/apiCall";
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
+import Menu from "../menu/Menu";
 
 const NavBar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -23,18 +24,18 @@ const NavBar = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const menuRef = useRef(null);
 
-  const handleClickOutside = (event) => {
-    if (menuRef.current && !menuRef.current.contains(event.target)) {
-      setOpenMenu(false);
-    }
-  };
+  // const handleClickOutside = (event) => {
+  //   if (menuRef.current && !menuRef.current.contains(event.target)) {
+  //     setOpenMenu(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -98,14 +99,14 @@ const NavBar = () => {
           <img src={currentUser.profilePic} alt="avt" />
           <span>{currentUser.name}</span>
           {openMenu && (
-            <div className="menu" ref={menuRef}>
+            <Menu menuRef={menuRef} setOpenMenu={setOpenMenu}>
               <Link to={"/profile/" + currentUser.id}>
                 <div className="option">Profile</div>
               </Link>
               <div className="option" onClick={handleLogout}>
                 Log out
               </div>
-            </div>
+            </Menu>
           )}
         </div>
       </div>

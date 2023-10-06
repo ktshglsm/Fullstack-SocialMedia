@@ -105,22 +105,13 @@
           border-radius: 50%;
           object-fit: cover;
         }
-        .menu {
-          position: absolute;
-          right: 0;
-          top: 110%;
-          border: 1px solid themed("border");
-          border-radius: 8px;
-          color: themed("textColor");
-          background-color: themed("bg");
-          overflow: hidden;
-          .option {
-            padding: 10px;
-            cursor: pointer;
-            width: 100px;
-            &:hover {
-              background-color: themed("bgSoft");
-            }
+
+        .option {
+          padding: 10px;
+          cursor: pointer;
+          width: 100px;
+          &:hover {
+            background-color: themed("bgSoft");
           }
         }
       }
