@@ -76,10 +76,10 @@ const Stories = () => {
   };
   return (
     <div className="stories">
-      <div className="story">
+      <div className="story" onClick={() => setOpenAddStory(true)}>
         <img src={currentUser.profilePic} alt="" />
         <span>{currentUser.name}</span>
-        <button onClick={() => setOpenAddStory(true)}>+</button>
+        <button>+</button>
       </div>
       {data?.map((story) => (
         <div
@@ -104,7 +104,7 @@ const Stories = () => {
                 openAddStory
                   ? file
                     ? URL.createObjectURL(file)
-                    : "https://i.pinimg.com/736x/6e/42/95/6e42951c52f0fa3e9fda558ef4e6b301.jpg "
+                    : "https://nhadepso.com/wp-content/uploads/2023/03/tron-bo-nhung-hinh-nen-dien-thoai-galaxy-dep-chat-luong-nhat_2.jpg"
                   : "/upload/" + story.img
               }
               alt=""

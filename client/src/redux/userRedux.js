@@ -20,7 +20,7 @@ const userSlice = createSlice({
             state.error = true;
         },
         updateSuccess: (state, action) => {
-            state.currentUser.user = action.payload
+            state.currentUser = action.payload
         },
         logoutSuccess: (state) => {
             state.currentUser = null;

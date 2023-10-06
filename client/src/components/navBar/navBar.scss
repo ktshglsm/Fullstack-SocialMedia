@@ -22,6 +22,9 @@
         color: #2b2a71;
         color: themed("logo");
       }
+      svg {
+        cursor: pointer;
+      }
       .search {
         display: flex;
         align-items: center;

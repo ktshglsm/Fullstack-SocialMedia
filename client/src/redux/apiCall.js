@@ -21,11 +21,8 @@ export const login = async (dispatch, user) => {
 
 export const updateUser = async (dispatch, user) => {
     try {
-        const res = await makeRequest.put("users", user, {
-            withCredentials: true,
-        });
-
-        dispatch(updateSuccess(res.data));
+        const res = await makeRequest.put("users", user);
+        await dispatch(updateSuccess(res.data));
     } catch (error) {
         console.log(error);
     }

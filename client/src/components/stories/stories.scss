@@ -1,139 +1,142 @@
 @import "../../style.scss";
 
 .stories {
-  display: flex;
-  gap: 10px;
-  height: 250px;
-  margin-bottom: 30px;
-  overflow-x: scroll;
-  width: calc(52vw - 20px);
-  position: relative;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  @include tablet {
-    height: 220px;
-    overflow-x: scroll;
-    width: calc(76vw - 20px);
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-  @include mobile {
-    height: 180px;
-    overflow-x: scroll;
-    width: calc(100vw - 20px);
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-
-  .story {
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-    width: 160px;
-    flex: none;
-    cursor: pointer;
-    @include tablet {
-      flex: none;
-      width: 140px;
-    }
-
-    @include mobile {
-      flex: none;
-      width: 100px;
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    span {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      color: #fff;
-      font-weight: 500;
-    }
-
-    button {
-      position: absolute;
-      left: 10px;
-      bottom: 40px;
-      color: #fff;
-      background-color: #5271ff;
-      border-radius: 50%;
-      border: none;
-      cursor: pointer;
-      width: 30px;
-      height: 30px;
-      font-size: 28px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  }
-  .container-full {
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgba($color: #000000, $alpha: 0.5);
-    height: 100vh;
-    width: 100vw;
+  @include themify($themes) {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+    gap: 10px;
+    height: 250px;
+    margin-bottom: 30px;
+    overflow-x: scroll;
+    width: calc(52vw - 20px);
+    position: relative;
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
-    .temporary {
-      width: 25%;
-      height: 80%;
-      background-color: #fff;
-      position: relative;
+    @include tablet {
+      height: 220px;
+      overflow-x: scroll;
+      width: calc(76vw - 20px);
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    @include mobile {
+      height: 180px;
+      overflow-x: scroll;
+      width: calc(100vw - 20px);
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .story {
       border-radius: 10px;
       overflow: hidden;
-      svg {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        height: 30px;
-        width: 30px;
-        cursor: pointer;
+      position: relative;
+      width: 160px;
+      flex: none;
+      cursor: pointer;
+      @include tablet {
+        flex: none;
+        width: 140px;
       }
+
+      @include mobile {
+        flex: none;
+        width: 100px;
+      }
+
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
-
-      .choose-image {
+      span {
         position: absolute;
         bottom: 10px;
         left: 10px;
-        font-size: 16px;
-        padding: 5px;
-        border-radius: 5px;
-        border: none;
-        background-color: #2ba656;
         color: #fff;
-        cursor: pointer;
+        font-weight: 500;
       }
-      .share {
+
+      button {
         position: absolute;
-        margin: 0;
-        bottom: 10px;
-        right: 10px;
-        font-size: 16px;
-        padding: 5px;
-        border-radius: 5px;
-        border: none;
-        background-color: #1b1d92;
+        left: 10px;
+        bottom: 40px;
         color: #fff;
+        background-color: #5271ff;
+        border-radius: 50%;
+        border: none;
         cursor: pointer;
+        width: 30px;
+        height: 30px;
+        font-size: 28px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    .container-full {
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: rgba($color: #000000, $alpha: 0.5);
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+
+      .temporary {
+        width: 25%;
+        height: 80%;
+        background-color: themed("bg");
+        color: themed("textColor");
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+
+        svg {
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          height: 30px;
+          width: 30px;
+          cursor: pointer;
+        }
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .choose-image {
+          position: absolute;
+          bottom: 10px;
+          left: 10px;
+          font-size: 16px;
+          padding: 5px;
+          border-radius: 5px;
+          border: none;
+          background-color: #2ba656;
+          color: #fff;
+          cursor: pointer;
+        }
+        .share {
+          position: absolute;
+          margin: 0;
+          bottom: 10px;
+          right: 10px;
+          font-size: 16px;
+          padding: 5px;
+          border-radius: 5px;
+          border: none;
+          background-color: #1b1d92;
+          color: #fff;
+          cursor: pointer;
+        }
       }
     }
   }
