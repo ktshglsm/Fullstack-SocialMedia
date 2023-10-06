@@ -15,7 +15,7 @@ export const login = async (dispatch, user) => {
         dispatch(loginSuccess(res.data));
         document.cookie = `session=${JSON.stringify(res.data)}; path=/;`;
     } catch (error) {
-        dispatch(loginFailure());
+        dispatch(loginFailure(error.response.data.message));
     }
 };
 

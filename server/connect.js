@@ -7,6 +7,7 @@ const sequelize = new Sequelize({
     username: 'root',
     password: '123456',
     database: 'social',
+    logging: false,
 });
 
 
