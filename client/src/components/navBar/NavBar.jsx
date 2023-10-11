@@ -10,13 +10,12 @@ import {
 } from "@mui/icons-material";
 import "./navBar.scss";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, toggle } from "../../redux/apiCall";
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import Menu from "../menu/Menu";
-import { io } from "socket.io-client";
 
 const NavBar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -24,19 +23,6 @@ const NavBar = () => {
   const [search, setSearch] = useState("");
   const [openMenu, setOpenMenu] = useState(false);
   const menuRef = useRef(null);
-  const [socket, setSocket] = useState(null);
-
-  useEffect(() => {
-    const newSocket = io("http://localhost:8080");
-    setSocket(newSocket);
-    return () => {
-      newSocket.disconnect();
-    };
-  }, [currentUser]);
-  useEffect(() => {
-    if (socket === null) return;
-    socket.emit("addNewUser", currentUser.id);
-  }, [socket]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

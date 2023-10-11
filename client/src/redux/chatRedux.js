@@ -1,16 +1,16 @@
-// import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-// const chatSlice = createSlice({
-//     name: "chat",
-//     initialState: {
-//         currentDarkMode: true,
-//     },
-//     reducers: {
-//         toggleTheme: (state) => {
-//             state.currentDarkMode = !state.currentDarkMode;
-//         },
-//     },
-// });
+const chatSlice = createSlice({
+    name: "chat",
+    initialState: {
+        onlineUsers: [],
+    },
+    reducers: {
+        updateOnlineUsers: (state, action) => {
+            state.onlineUsers = [...action.payload];
+        },
+    },
+});
 
-// export const { toggleTheme } = darkModeSlice.actions;
-// export default darkModeSlice.reducer;
+export const { updateOnlineUsers } = chatSlice.actions;
+export default chatSlice.reducer;

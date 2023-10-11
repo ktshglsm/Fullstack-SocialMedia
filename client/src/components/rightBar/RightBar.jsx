@@ -1,16 +1,42 @@
 import { useQuery } from "@tanstack/react-query";
 import "./rightBar.scss";
 import { makeRequest } from "../../axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { io } from "socket.io-client";
+import { useEffect, useState } from "react";
+import { updateOnline } from "../../redux/apiCall";
 
 const RightBar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
+  const onlineUsers = useSelector((state) => state.chat.onlineUsers);
+  const dispatch = useDispatch();
   const { id: userId } = currentUser;
   const { isLoading, error, data } = useQuery(["friends", userId], () =>
     makeRequest.get("/relationships/friend").then((res) => {
       return res.data;
     })
   );
+
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:8080");
+    setSocket(newSocket);
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [currentUser]);
+  useEffect(() => {
+    if (socket === null) return;
+    socket.emit("addNewUser", currentUser.id);
+    socket.on("getOnlineUsers", (res) => {
+      updateOnline(dispatch, res);
+    });
+    return () => {
+      socket.off("getOnlineUsers");
+    };
+  }, [socket]);
+
   return (
     <div className="rightBar">
       <div className="container">
@@ -78,7 +104,9 @@ const RightBar = () => {
             <div className="user">
               <div className="userInfo">
                 <img src={user.profilePic} alt="" />
-                <div className="online" />
+                {onlineUsers.some((oUser) => oUser.userId === user.id) && (
+                  <div className="online" />
+                )}
                 <span>{user.name}</span>
               </div>
             </div>

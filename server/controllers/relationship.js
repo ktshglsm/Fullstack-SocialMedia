@@ -64,7 +64,7 @@ const getFriends = async (req, res, next) => {
                     : relationship.followerUser
             );
         const friends = await User.findAll({
-            attributes: ['name', 'profilePic'],
+            attributes: ['id', 'name', 'profilePic'],
             where: {
                 id: friendIds,
             },
