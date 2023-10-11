@@ -5,6 +5,8 @@ const postRoutes = require("./posts.js")
 const relationshipRoutes = require("./relationships.js")
 const storyRoutes = require("./stories.js")
 const userRoutes = require("./users.js")
+const conversationRoutes = require("./conversations.js")
+const messageRoutes = require("./messages.js")
 
 const route = (app) => {
     app.use("/api/auth", authRoutes)
@@ -14,6 +16,8 @@ const route = (app) => {
     app.use("/api/relationships", relationshipRoutes)
     app.use("/api/stories", storyRoutes)
     app.use("/api/users", userRoutes)
+    app.use("/api/conversations", conversationRoutes)
+    app.use("/api/messages", messageRoutes)
 }
 
 module.exports = route;

@@ -7,6 +7,8 @@ const PostModel = require('./Post.js');
 const RelationshipModel = require('./Relationship.js');
 const StoryModel = require('./Story.js');
 const UserModel = require('./User.js');
+const ConversationModel = require('./Conversation.js');
+const MessageModel = require('./Message.js');
 
 const Comment = CommentModel(sequelize, DataTypes);
 const Like = LikeModel(sequelize, DataTypes);
@@ -14,6 +16,8 @@ const Post = PostModel(sequelize, DataTypes);
 const Relationship = RelationshipModel(sequelize, DataTypes);
 const Story = StoryModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
+const Conversation = ConversationModel(sequelize, DataTypes);
+const Message = MessageModel(sequelize, DataTypes);
 
 //comment fk
 User.hasMany(Comment, {
@@ -77,6 +81,48 @@ Story.belongsTo(User, {
   foreignKey: 'userId',
 })
 
+//conversation fk
+User.hasMany(Conversation, {
+  foreignKey: 'firstUser',
+  as: 'first'
+})
+Conversation.belongsTo(User, {
+  foreignKey: 'firstUser',
+  as: 'first'
+})
+User.hasMany(Conversation, {
+  foreignKey: 'secondUser',
+  as: 'second'
+})
+Conversation.belongsTo(User, {
+  foreignKey: 'secondUser',
+  as: 'second'
+})
+
+//message fk
+User.hasMany(Message, {
+  foreignKey: 'sender',
+  as: 'send'
+})
+Message.belongsTo(User, {
+  foreignKey: 'sender',
+  as: 'send'
+})
+User.hasMany(Message, {
+  foreignKey: 'receiver',
+  as: 'receive'
+})
+Message.belongsTo(User, {
+  foreignKey: 'receiver',
+  as: 'receive'
+})
+Conversation.hasMany(Message, {
+  foreignKey: 'conversationId',
+})
+Message.belongsTo(Conversation, {
+  foreignKey: 'conversationId',
+})
+
 
 module.exports = {
   Comment,
@@ -84,5 +130,7 @@ module.exports = {
   Post,
   Relationship,
   Story,
-  User
+  User,
+  Conversation,
+  Message
 };
