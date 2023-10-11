@@ -16,6 +16,7 @@ import { logout, toggle } from "../../redux/apiCall";
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import Menu from "../menu/Menu";
+import { io } from "socket.io-client";
 
 const NavBar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -23,19 +24,19 @@ const NavBar = () => {
   const [search, setSearch] = useState("");
   const [openMenu, setOpenMenu] = useState(false);
   const menuRef = useRef(null);
+  const [socket, setSocket] = useState(null);
 
-  // const handleClickOutside = (event) => {
-  //   if (menuRef.current && !menuRef.current.contains(event.target)) {
-  //     setOpenMenu(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
+  useEffect(() => {
+    const newSocket = io("http://localhost:8080");
+    setSocket(newSocket);
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [currentUser]);
+  useEffect(() => {
+    if (socket === null) return;
+    socket.emit("addNewUser", currentUser.id);
+  }, [socket]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
