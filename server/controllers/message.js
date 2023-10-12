@@ -3,12 +3,18 @@ const { User, Message } = require("../models")
 
 const getMessages = async (req, res, next) => {
     const { conversationId } = req.params
+    const { userId } = req.body
     try {
         const messages = await Message.findAll({
-            where: {
-                conversationId
+            include: {
+                model: User,
+                as: 'send',
+                attributes: ['profilePic', 'name'],
+
             },
-            order: [['createdAt', 'DESC']],
+            where: {
+                conversationId,
+            }
         })
         return res.status(200).json(messages);
     } catch (error) {

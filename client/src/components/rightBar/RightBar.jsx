@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import { updateOnline } from "../../redux/apiCall";
+import Chat from "../chat/Chat";
 
 const RightBar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -16,6 +17,7 @@ const RightBar = () => {
       return res.data;
     })
   );
+  const [secondUsers, setSecondUsers] = useState([]);
 
   const [socket, setSocket] = useState(null);
 
@@ -36,7 +38,20 @@ const RightBar = () => {
       socket.off("getOnlineUsers");
     };
   }, [socket]);
-
+  const handleOpenChat = (id) => {
+    if (secondUsers.indexOf(id) !== -1) {
+      let newSecondUsers = [...secondUsers];
+      newSecondUsers.splice(secondUsers.indexOf(id), 1);
+      setSecondUsers(newSecondUsers);
+    } else if (secondUsers.length === 3) {
+      let newSecondUsers = [...secondUsers];
+      newSecondUsers.shift();
+      newSecondUsers.push(id);
+      setSecondUsers(newSecondUsers);
+    } else {
+      setSecondUsers([...secondUsers, id]);
+    }
+  };
   return (
     <div className="rightBar">
       <div className="container">
@@ -101,7 +116,7 @@ const RightBar = () => {
         <div className="item">
           <span>Friends</span>
           {data?.map((user) => (
-            <div className="user">
+            <div className="user" onClick={() => handleOpenChat(user.id)}>
               <div className="userInfo">
                 <img src={user.profilePic} alt="" />
                 {onlineUsers.some((oUser) => oUser.userId === user.id) && (
@@ -112,6 +127,7 @@ const RightBar = () => {
             </div>
           ))}
         </div>
+        <Chat secondUsers={secondUsers} handleOpenChat={handleOpenChat} />
       </div>
     </div>
   );

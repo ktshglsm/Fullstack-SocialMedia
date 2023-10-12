@@ -1,16 +1,24 @@
+const { Op } = require("sequelize");
 const { User, Conversation } = require("../models")
 
 
 const getConversation = async (req, res, next) => {
-    const { secondUser } = req.params
-    const { userId: firstUser } = req.body
+    const { other } = req.params
+    const { userId: me } = req.body
     try {
         const conversation = await Conversation.findOne({
             where: {
-                firstUser, secondUser
+                [Op.or]: [
+                    { firstUser: me, secondUser: other },
+                    { firstUser: other, secondUser: me }
+                ]
             },
         })
-        return res.status(200).json(conversation);
+        const otherId = me === conversation.firstUser ? conversation.secondUser : conversation.firstUser
+        const otherUser = await User.findByPk(otherId, {
+            attributes: ['name', 'profilePic', 'id']
+        })
+        return res.status(200).json({ conversation, otherUser });
     } catch (error) {
         next(error);
     }
