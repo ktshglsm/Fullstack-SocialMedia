@@ -1,6 +1,8 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userReducer from "./userRedux";
 import darkModeReducer from "./darkModeRedux"
+import chatReducer from "./chatRedux"
+
 
 import {
     persistStore,
@@ -20,7 +22,7 @@ const persistConfig = {
     storage,
 };
 
-const rootReducer = combineReducers({ user: userReducer, darkMode: darkModeReducer });
+const rootReducer = combineReducers({ user: userReducer, darkMode: darkModeReducer, chat: chatReducer });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

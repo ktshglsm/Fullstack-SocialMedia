@@ -1,0 +1,112 @@
+@import "../../style.scss";
+
+.chat {
+  @include themify($themes) {
+    position: fixed;
+    height: 450px;
+    width: 57vw;
+    bottom: 0;
+    right: 24vw;
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 30px;
+    .conversation {
+      width: 30%;
+      height: 100%;
+      border-top-right-radius: 10px;
+      border-top-left-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      background-color: #000;
+      flex-direction: column;
+      background-color: themed("bgSoft");
+      box-shadow: 1px 1px 1px 1px themed("border");
+      .header {
+        padding: 10px;
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: themed("border");
+        .user {
+          display: flex;
+          gap: 5px;
+          align-items: center;
+          img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+          span {
+            font-size: 16px;
+          }
+        }
+        svg {
+          cursor: pointer;
+        }
+      }
+      .body {
+        flex: 9;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        overflow-y: auto;
+        .message {
+          display: flex;
+          gap: 5px;
+          &.sender {
+            flex-direction: row-reverse;
+          }
+          .send {
+            background-color: rosybrown;
+            padding: 5px 10px;
+            border-radius: 20px;
+            width: fit-content;
+            max-width: 60%;
+            word-wrap: break-word;
+            align-self: flex-end;
+          }
+          .receive {
+            background-color: blueviolet;
+            padding: 5px 10px;
+            border-radius: 20px;
+            width: fit-content;
+            max-width: 60%;
+            word-wrap: break-word;
+          }
+          img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+      }
+      .footer {
+        padding: 10px;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        input {
+          flex: 1;
+          border-radius: 20px;
+          border: none;
+          outline: none;
+          height: 50%;
+          padding: 5px 8px;
+          background-color: themed("border");
+          color: themed("textColor");
+          font-size: 14px;
+          margin-left: 5px;
+        }
+        svg {
+          color: rosybrown;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

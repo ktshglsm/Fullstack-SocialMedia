@@ -7,6 +7,7 @@ import {
     updateSuccess,
 } from "./userRedux";
 import { toggleTheme } from "./darkModeRedux"
+import { updateOnlineUsers, updateSocketIo } from "./chatRedux";
 
 export const login = async (dispatch, user) => {
     dispatch(loginStart());
@@ -15,17 +16,14 @@ export const login = async (dispatch, user) => {
         dispatch(loginSuccess(res.data));
         document.cookie = `session=${JSON.stringify(res.data)}; path=/;`;
     } catch (error) {
-        dispatch(loginFailure());
+        dispatch(loginFailure(error.response.data.message));
     }
 };
 
 export const updateUser = async (dispatch, user) => {
     try {
-        const res = await makeRequest.put("users", user, {
-            withCredentials: true,
-        });
-
-        dispatch(updateSuccess(res.data));
+        const res = await makeRequest.put("users", user);
+        await dispatch(updateSuccess(res.data));
     } catch (error) {
         console.log(error);
     }
@@ -37,4 +35,12 @@ export const logout = async (dispatch) => {
 
 export const toggle = async (dispatch) => {
     dispatch(toggleTheme());
+};
+
+export const updateOnline = async (dispatch, onlineUsers) => {
+    dispatch(updateOnlineUsers(onlineUsers));
+};
+
+export const updateSocket = async (dispatch, newSocket) => {
+    dispatch(updateSocketIo(newSocket));
 };

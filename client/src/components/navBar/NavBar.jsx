@@ -10,16 +10,20 @@ import {
 } from "@mui/icons-material";
 import "./navBar.scss";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, toggle } from "../../redux/apiCall";
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
+import Menu from "../menu/Menu";
 
 const NavBar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
   const darkMode = useSelector((state) => state.darkMode.currentDarkMode);
   const [search, setSearch] = useState("");
+  const [openMenu, setOpenMenu] = useState(false);
+  const menuRef = useRef(null);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoading, error, data } = useQuery(
@@ -78,9 +82,19 @@ const NavBar = () => {
         <PersonOutlined />
         <EmailOutlined />
         <NotificationsOutlined />
-        <div className="user" onClick={handleLogout}>
+        <div className="user" onClick={() => setOpenMenu((prev) => !prev)}>
           <img src={currentUser.profilePic} alt="avt" />
           <span>{currentUser.name}</span>
+          {openMenu && (
+            <Menu menuRef={menuRef} setOpenMenu={setOpenMenu}>
+              <Link to={"/profile/" + currentUser.id}>
+                <div className="option">Profile</div>
+              </Link>
+              <div className="option" onClick={handleLogout}>
+                Log out
+              </div>
+            </Menu>
+          )}
         </div>
       </div>
     </div>

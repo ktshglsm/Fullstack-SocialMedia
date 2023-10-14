@@ -6,15 +6,19 @@ import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link } from "react-router-dom";
 import Comments from "../comments/Comments";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import moment from "moment";
 import { makeRequest } from "../../axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import Menu from "../menu/Menu";
+import { Bookmark, Delete, Favorite } from "@mui/icons-material";
 
 const Post = ({ post }) => {
   const currentUser = useSelector((state) => state.user.currentUser);
   const [commentOpen, setCommentOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
+
   const {
     isLoading: likeLoading,
     error: likeError,
@@ -25,7 +29,7 @@ const Post = ({ post }) => {
     })
   );
   const queryClient = useQueryClient();
-  const mutation = useMutation(
+  const mutationLike = useMutation(
     (postId) => {
       return likeData?.includes(currentUser.id)
         ? makeRequest.delete("/likes", { data: { postId } })
@@ -37,9 +41,23 @@ const Post = ({ post }) => {
       },
     }
   );
+  const mutationPost = useMutation(
+    (postId) => {
+      return makeRequest.delete("/posts/" + postId);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("posts");
+      },
+    }
+  );
   const handleClick = () => {
-    mutation.mutate(post.id);
+    mutationLike.mutate(post.id);
   };
+  const handleDelete = async () => {
+    mutationPost.mutate(post.id);
+  };
+  const menuRef = useRef(null);
   return (
     <div className="post">
       <div className="container">
@@ -56,7 +74,23 @@ const Post = ({ post }) => {
               <span className="date">{moment(post.createdAt).fromNow()}</span>
             </div>
           </div>
-          <MoreHorizIcon />
+          <div style={{ position: "relative" }}>
+            <MoreHorizIcon onClick={() => setOpenMenu((prev) => !prev)} />
+            {openMenu && (
+              <Menu menuRef={menuRef} setOpenMenu={setOpenMenu}>
+                <div className="option">
+                  Favorite
+                  <Bookmark style={{ color: "yellow" }} />
+                </div>
+                {post.userId === currentUser.id && (
+                  <div className="option" onClick={handleDelete}>
+                    Delete Post
+                    <Delete style={{ color: "red" }} />
+                  </div>
+                )}
+              </Menu>
+            )}
+          </div>
         </div>
         <div className="content">
           <p>{post.desc}</p>

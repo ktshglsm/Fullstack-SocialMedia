@@ -37,5 +37,5 @@ route(app);
 app.use(handleError);
 
 app.listen(8800, () => {
-    console.log('hello');
+    console.log('Server listening on');
 })

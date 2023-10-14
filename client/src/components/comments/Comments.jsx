@@ -29,8 +29,10 @@ const Comments = ({ postId }) => {
   );
 
   const handleClick = async () => {
-    mutation.mutate({ desc, postId });
-    setDesc("");
+    if (desc) {
+      mutation.mutate({ desc, postId });
+      setDesc("");
+    }
   };
   return (
     <div className="comments">

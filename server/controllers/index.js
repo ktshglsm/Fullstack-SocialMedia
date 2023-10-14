@@ -5,6 +5,8 @@ const postController = require('./post.js');
 const relationshipController = require('./relationship.js');
 const storyController = require('./story.js');
 const userController = require('./user.js');
+const conversationController = require('./conversation.js');
+const messageController = require('./message.js');
 
 module.exports = {
     authController,
@@ -13,5 +15,7 @@ module.exports = {
     postController,
     relationshipController,
     storyController,
-    userController
+    userController,
+    conversationController,
+    messageController,
 }

@@ -22,6 +22,9 @@
         color: #2b2a71;
         color: themed("logo");
       }
+      svg {
+        cursor: pointer;
+      }
       .search {
         display: flex;
         align-items: center;
@@ -50,13 +53,15 @@
           top: 100%;
           left: 0;
           padding-top: 5px;
-          background-color: #d2cfcf;
+          background-color: themed("bg");
           margin-top: 3px;
           border-radius: 5px;
           overflow: hidden;
+          border: 1px solid themed("border");
+
           .item {
             &:hover {
-              background-color: #edecec;
+              background-color: themed("bgSoft");
             }
             padding: 10px;
             cursor: pointer;
@@ -71,7 +76,7 @@
             }
             span {
               font-size: 16px;
-              color: #000;
+              color: themed("textColor");
             }
           }
         }
@@ -85,10 +90,12 @@
         display: none;
       }
       .user {
+        cursor: pointer;
         display: flex;
         align-items: center;
         gap: 10px;
         font-weight: 500;
+        position: relative;
         @include tablet {
           display: none;
         }
@@ -98,7 +105,14 @@
           border-radius: 50%;
           object-fit: cover;
         }
-        span {
+
+        .option {
+          padding: 10px;
+          cursor: pointer;
+          width: 100px;
+          &:hover {
+            background-color: themed("bgSoft");
+          }
         }
       }
     }

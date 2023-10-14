@@ -3,14 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import "./login.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/apiCall";
+import { loginFailure } from "../../redux/userRedux";
 
 const Login = () => {
-  const user = useSelector((state) => state.user.currentUser);
+  const { currentUser, error } = useSelector((state) => state.user);
   const [inputs, setInputs] = useState({
     username: "",
     password: "",
   });
-  const [err, setErr] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -19,18 +19,22 @@ const Login = () => {
   };
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      await login(dispatch, inputs);
-    } catch (error) {
-      setErr(error.response.data);
+    if (inputs.username && inputs.password) {
+      try {
+        await login(dispatch, inputs);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      dispatch(loginFailure("Please enter a username and password"));
     }
   };
 
   useEffect(() => {
-    if (user) {
+    if (currentUser) {
       navigate("/");
     }
-  }, [user]);
+  }, [currentUser]);
 
   return (
     <div className="login">
@@ -58,7 +62,7 @@ const Login = () => {
               onChange={handleChange}
               name="password"
             />
-            {err && <p>{err}</p>}
+            {error && <p>{error}</p>}
             <button onClick={handleLogin}>Login</button>
           </form>
         </div>

@@ -32,12 +32,17 @@
           border-bottom: 1px solid lightgray;
           padding: 20px 10px;
         }
+        p {
+          color: red;
+          font-weight: bold;
+        }
         button {
           width: 50%;
           padding: 10px;
           border: none;
           background-color: rebeccapurple;
           color: #fff;
+          border-radius: 5px;
           font-weight: bold;
           cursor: pointer;
         }
@@ -54,14 +59,12 @@
       flex-direction: column;
       gap: 30px;
       color: #fff;
-      
 
       h1 {
         font-size: 100px;
         line-height: 100px;
       }
-      p {
-      }
+
       span {
         font-size: 14px;
       }
@@ -72,6 +75,7 @@
         cursor: pointer;
         background-color: #fff;
         color: rebeccapurple;
+        border-radius: 5px;
         font-weight: bold;
       }
     }

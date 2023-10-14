@@ -9,6 +9,10 @@ const Register = () => {
     email: "",
     password: "",
     name: "",
+    profilePic:
+      "https://nhadepso.com/wp-content/uploads/2023/03/tron-bo-nhung-hinh-nen-dien-thoai-galaxy-dep-chat-luong-nhat_2.jpg",
+    coverPic:
+      "https://nhadepso.com/wp-content/uploads/2023/03/tron-bo-nhung-hinh-nen-dien-thoai-galaxy-dep-chat-luong-nhat_2.jpg",
   });
   const [err, setErr] = useState(null);
   const navigate = useNavigate();
@@ -18,11 +22,15 @@ const Register = () => {
   };
   const handleRegister = async (e) => {
     e.preventDefault();
-    try {
-      await axios.post("http://localhost:8800/api/auth/register", inputs);
-      navigate("/login");
-    } catch (error) {
-      setErr(error.response.data);
+    if (inputs.username && inputs.email && inputs.name && inputs.password) {
+      try {
+        await axios.post("http://localhost:8800/api/auth/register", inputs);
+        navigate("/login");
+      } catch (error) {
+        setErr(error.response.data);
+      }
+    } else {
+      setErr("Please fill all fields!");
     }
   };
   return (

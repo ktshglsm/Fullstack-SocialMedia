@@ -12,7 +12,7 @@
       display: none;
     }
     @include tablet {
-      display: none;
+      // display: none;
     }
 
     &::-webkit-scrollbar {
@@ -37,6 +37,7 @@
           justify-content: space-between;
           margin: 20px 0;
           gap: 20px;
+          cursor: pointer;
           .userInfo {
             display: flex;
             align-items: center;

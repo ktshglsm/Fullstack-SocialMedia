@@ -1,4 +1,5 @@
-const { Relationship } = require("../models");
+const { Op } = require("sequelize");
+const { Relationship, User } = require("../models");
 
 const addFollow = async (req, res, next) => {
     const { userId: followerUser, followedUser } = req.body;
@@ -37,5 +38,40 @@ const getFollowed = async (req, res, next) => {
         next(error);
     }
 }
-
-module.exports = { addFollow, deleteFollow, getFollowed, getFollower }
+const getFriends = async (req, res, next) => {
+    const { userId } = req.body;
+    try {
+        const relationships = await Relationship.findAll({
+            where: {
+                [Op.or]: [{ followerUser: userId }, { followedUser: userId }],
+            },
+        });
+        const friendIds = relationships
+            .filter(
+                (relationship) =>
+                    (relationship.followerUser == userId &&
+                        relationships.some(
+                            (r) => r.followedUser == userId && r.followerUser == relationship.followedUser
+                        )) ||
+                    (relationship.followedUser == userId &&
+                        relationships.some(
+                            (r) => r.followerUser == userId && r.followedUser == relationship.followerUser
+                        ))
+            )
+            .map((relationship) =>
+                relationship.followerUser == userId
+                    ? relationship.followedUser
+                    : relationship.followerUser
+            );
+        const friends = await User.findAll({
+            attributes: ['id', 'name', 'profilePic'],
+            where: {
+                id: friendIds,
+            },
+        });
+        return res.status(200).json(friends)
+    } catch (error) {
+        next(error);
+    }
+}
+module.exports = { addFollow, deleteFollow, getFollowed, getFollower, getFriends }
