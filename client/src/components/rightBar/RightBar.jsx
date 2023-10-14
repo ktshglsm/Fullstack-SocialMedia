@@ -53,7 +53,7 @@ const RightBar = () => {
   return (
     <div className="rightBar">
       <div className="container">
-        <div className="item">
+        {/* <div className="item">
           <span>Suggestions for you</span>
           <div className="user">
             <div className="userInfo">
@@ -110,7 +110,7 @@ const RightBar = () => {
             </div>
             <span>1 min ago</span>
           </div>
-        </div>
+        </div> */}
         <div className="item">
           <span>Friends</span>
           {data?.map((user) => (
@@ -125,7 +125,9 @@ const RightBar = () => {
             </div>
           ))}
         </div>
-        <Chat secondUsers={secondUsers} handleOpenChat={handleOpenChat} />
+        {secondUsers.length > 0 && (
+          <Chat secondUsers={secondUsers} handleOpenChat={handleOpenChat} />
+        )}
       </div>
     </div>
   );

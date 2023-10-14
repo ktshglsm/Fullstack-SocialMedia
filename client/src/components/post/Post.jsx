@@ -97,14 +97,11 @@ const Post = ({ post }) => {
           <img src={"/upload/" + post.img} alt="" />
         </div>
         <div className="info">
-          <div className="item">
+          <div className="item" onClick={handleClick}>
             {likeData?.includes(currentUser.id) ? (
-              <FavoriteOutlinedIcon
-                style={{ color: "red" }}
-                onClick={handleClick}
-              />
+              <FavoriteOutlinedIcon style={{ color: "red" }} />
             ) : (
-              <FavoriteBorderOutlinedIcon onClick={handleClick} />
+              <FavoriteBorderOutlinedIcon />
             )}
             {likeData?.length} Likes
           </div>
