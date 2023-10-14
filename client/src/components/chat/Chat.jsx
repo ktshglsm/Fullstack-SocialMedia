@@ -19,6 +19,9 @@ const Chat = ({ secondUsers, handleOpenChat }) => {
 
 const Conversation = ({ secondUser, handleOpenChat }) => {
   const currentUser = useSelector((state) => state.user.currentUser);
+  const { socket } = useSelector((state) => state.chat);
+  const [messages, setMessages] = useState([]);
+  const [conversationId, setConversationId] = useState(0);
   const [text, setText] = useState("");
   const {
     isLoading: isLoadingCon,
@@ -26,30 +29,58 @@ const Conversation = ({ secondUser, handleOpenChat }) => {
     data: dataCon,
   } = useQuery(["conversation", secondUser], () =>
     makeRequest.get("/conversations/" + secondUser).then((res) => {
+      setConversationId(res.data.conversation.id);
       return res.data;
     })
   );
 
-  const conversationId = dataCon?.conversation.id;
   const {
     isLoading: isLoadingMs,
     error: errorMs,
     data: dataMs,
   } = useQuery(["messages", conversationId], () =>
     makeRequest.get("/messages/" + conversationId).then((res) => {
+      setMessages(res.data);
       return res.data;
     })
   );
 
+  useEffect(() => {
+    if (socket === null || conversationId === 0) return;
+    socket.on("getMessage", (res) => {
+      res.conversationId === conversationId &&
+        setMessages((prev) => [...prev, res]);
+    });
+    return () => {
+      socket.off("getMessage");
+    };
+  }, [socket, conversationId]);
   const conversationRef = useRef(null);
   useEffect(() => {
     if (conversationRef.current) {
       conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
     }
-  }, [dataMs]);
+  }, [messages]);
 
   const handleSend = async () => {
+    if (text) {
+      const newMessage = {
+        text,
+        conversationId,
+        receiver: dataCon?.otherUser.id,
+        sender: currentUser.id,
+      };
+      await socket.emit("addMessage", newMessage);
+      await makeRequest.post("/messages", newMessage);
+      setMessages((prev) => [...prev, newMessage]);
+    }
     setText("");
+  };
+  const handleKeyPress = async (event) => {
+    if (event.key === "Enter") {
+      await handleSend();
+      event.target.focus();
+    }
   };
   return (
     <div className="conversation">
@@ -61,7 +92,7 @@ const Conversation = ({ secondUser, handleOpenChat }) => {
         <Close onClick={() => handleOpenChat(dataCon?.otherUser.id)} />
       </div>
       <div className="body" ref={conversationRef}>
-        {dataMs?.map((message) => (
+        {messages?.map((message) => (
           <div
             className={
               "message " +
@@ -69,7 +100,7 @@ const Conversation = ({ secondUser, handleOpenChat }) => {
             }
           >
             {message.sender !== currentUser.id && (
-              <img src={message.send.profilePic} alt="" />
+              <img src={dataCon?.otherUser.profilePic} alt="" />
             )}
 
             <div
@@ -85,6 +116,7 @@ const Conversation = ({ secondUser, handleOpenChat }) => {
           type="text"
           placeholder="Send..."
           value={text}
+          onKeyPress={handleKeyPress}
           onChange={(e) => setText(e.target.value)}
         />
         <Send onClick={handleSend} />

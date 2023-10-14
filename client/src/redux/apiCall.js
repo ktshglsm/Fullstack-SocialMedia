@@ -7,7 +7,7 @@ import {
     updateSuccess,
 } from "./userRedux";
 import { toggleTheme } from "./darkModeRedux"
-import { updateOnlineUsers } from "./chatRedux";
+import { updateOnlineUsers, updateSocketIo } from "./chatRedux";
 
 export const login = async (dispatch, user) => {
     dispatch(loginStart());
@@ -39,4 +39,8 @@ export const toggle = async (dispatch) => {
 
 export const updateOnline = async (dispatch, onlineUsers) => {
     dispatch(updateOnlineUsers(onlineUsers));
+};
+
+export const updateSocket = async (dispatch, newSocket) => {
+    dispatch(updateSocketIo(newSocket));
 };

@@ -4,12 +4,12 @@ import { makeRequest } from "../../axios";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
-import { updateOnline } from "../../redux/apiCall";
+import { updateOnline, updateSocket } from "../../redux/apiCall";
 import Chat from "../chat/Chat";
 
 const RightBar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
-  const onlineUsers = useSelector((state) => state.chat.onlineUsers);
+  const { onlineUsers, socket } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
   const { id: userId } = currentUser;
   const { isLoading, error, data } = useQuery(["friends", userId], () =>
@@ -19,11 +19,9 @@ const RightBar = () => {
   );
   const [secondUsers, setSecondUsers] = useState([]);
 
-  const [socket, setSocket] = useState(null);
-
   useEffect(() => {
     const newSocket = io("http://localhost:8080");
-    setSocket(newSocket);
+    updateSocket(dispatch, newSocket);
     return () => {
       newSocket.disconnect();
     };
