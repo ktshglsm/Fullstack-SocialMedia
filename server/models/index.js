@@ -9,6 +9,7 @@ const StoryModel = require('./Story.js');
 const UserModel = require('./User.js');
 const ConversationModel = require('./Conversation.js');
 const MessageModel = require('./Message.js');
+const NotificationModel = require('./Notification.js');
 
 const Comment = CommentModel(sequelize, DataTypes);
 const Like = LikeModel(sequelize, DataTypes);
@@ -18,6 +19,7 @@ const Story = StoryModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
 const Conversation = ConversationModel(sequelize, DataTypes);
 const Message = MessageModel(sequelize, DataTypes);
+const Notification = NotificationModel(sequelize, DataTypes);
 
 //comment fk
 User.hasMany(Comment, {
@@ -123,6 +125,30 @@ Message.belongsTo(Conversation, {
   foreignKey: 'conversationId',
 })
 
+//notification fk
+User.hasMany(Notification, {
+  foreignKey: 'sender',
+  as: 'NotificationSend'
+})
+Notification.belongsTo(User, {
+  foreignKey: 'sender',
+  as: 'NotificationSend'
+})
+User.hasMany(Notification, {
+  foreignKey: 'receiver',
+  as: 'NotificationReceive'
+})
+Notification.belongsTo(User, {
+  foreignKey: 'receiver',
+  as: 'NotificationReceive'
+})
+Conversation.hasMany(Notification, {
+  foreignKey: 'conversationId',
+})
+Notification.belongsTo(Conversation, {
+  foreignKey: 'conversationId',
+})
+
 
 module.exports = {
   Comment,
@@ -132,5 +158,6 @@ module.exports = {
   Story,
   User,
   Conversation,
-  Message
+  Message,
+  Notification
 };
