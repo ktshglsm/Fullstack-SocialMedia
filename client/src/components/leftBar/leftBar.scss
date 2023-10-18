@@ -6,11 +6,11 @@
     top: 70.5px;
     height: calc(100vh - 70.5px);
     overflow: scroll;
-    background-color: themed('bg');
-    color: themed('textColor');
-    @include mobile{
+    background-color: themed("bg");
+    color: themed("textColor");
+    @include mobile {
       display: none;
-  }
+    }
 
     &::-webkit-scrollbar {
       display: none;
@@ -21,7 +21,7 @@
         margin: 20px 0;
         border: none;
         height: 0.5px;
-        background-color: themed('border');
+        background-color: themed("border");
       }
 
       .menu {

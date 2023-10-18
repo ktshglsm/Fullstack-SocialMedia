@@ -5,6 +5,6 @@ const verifyToken = require("../middleware/verifyToken");
 const router = express.Router();
 router.get('/:conversationId', verifyToken, notificationController.getNotifications);
 router.post('/', verifyToken, notificationController.addNotification);
-router.delete('/:conversationId', verifyToken, notificationController.deleteNotification);
+router.delete('/:sender', verifyToken, notificationController.deleteNotification);
 
 module.exports = router;

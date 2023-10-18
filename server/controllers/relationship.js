@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Relationship, User } = require("../models");
+const { Relationship, User, Notification } = require("../models");
 
 const addFollow = async (req, res, next) => {
     const { userId: followerUser, followedUser } = req.body;
@@ -65,6 +65,14 @@ const getFriends = async (req, res, next) => {
             );
         const friends = await User.findAll({
             attributes: ['id', 'name', 'profilePic'],
+            include: {
+                model: Notification,
+                as: 'NotificationSend',
+                where: {
+                    receiver: userId,
+                },
+                required: false,
+            },
             where: {
                 id: friendIds,
             },

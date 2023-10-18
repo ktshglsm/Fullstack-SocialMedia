@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import "./rightBar.scss";
 import { makeRequest } from "../../axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,8 +17,18 @@ const RightBar = () => {
       return res.data;
     })
   );
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    (sender) => {
+      return makeRequest.delete("/notifications/" + sender);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("friends");
+      },
+    }
+  );
   const [secondUsers, setSecondUsers] = useState([]);
-
   useEffect(() => {
     const newSocket = io("http://localhost:8080");
     updateSocket(dispatch, newSocket);
@@ -46,8 +56,10 @@ const RightBar = () => {
       newSecondUsers.shift();
       newSecondUsers.push(id);
       setSecondUsers(newSecondUsers);
+      mutation.mutate(id);
     } else {
       setSecondUsers([...secondUsers, id]);
+      mutation.mutate(id);
     }
   };
   return (
@@ -122,6 +134,11 @@ const RightBar = () => {
                 )}
                 <span>{user.name}</span>
               </div>
+              {user.NotificationSend.length > 0 && (
+                <div className="notification">
+                  {user.NotificationSend.length}
+                </div>
+              )}
             </div>
           ))}
         </div>

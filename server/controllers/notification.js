@@ -27,9 +27,10 @@ const addNotification = async (req, res, next) => {
 };
 
 const deleteNotification = async (req, res, next) => {
-    const { conversationId } = req.params
+    const { sender } = req.params
+    const { userId: receiver } = req.body
     try {
-        await Notification.destroy({ where: { conversationId } });
+        await Notification.destroy({ where: { sender, receiver } });
         return res.status(200).json('deleteNotification success');
     } catch (error) {
         next(error);
