@@ -70,8 +70,15 @@ const Conversation = ({ secondUser, handleOpenChat }) => {
         receiver: dataCon?.otherUser.id,
         sender: currentUser.id,
       };
-      await socket.emit("addMessage", newMessage);
+      const newNotification = {
+        conversationId,
+        receiver: dataCon?.otherUser.id,
+        sender: currentUser.id,
+      };
       await makeRequest.post("/messages", newMessage);
+      await makeRequest.post("/notifications", newNotification);
+      await socket.emit("addMessage", newMessage);
+      await socket.emit("addNotification", newNotification);
       setMessages((prev) => [...prev, newMessage]);
     }
     setText("");

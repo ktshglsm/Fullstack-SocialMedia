@@ -3,16 +3,14 @@
 .chat {
   @include themify($themes) {
     position: fixed;
-    height: 450px;
-    width: 57vw;
     bottom: 0;
     right: 24vw;
     display: flex;
     flex-direction: row-reverse;
     gap: 30px;
     .conversation {
-      width: 30%;
-      height: 100%;
+      width: 320px;
+      height: 450px;
       border-top-right-radius: 10px;
       border-top-left-radius: 10px;
       overflow: hidden;

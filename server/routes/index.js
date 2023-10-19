@@ -7,6 +7,7 @@ const storyRoutes = require("./stories.js")
 const userRoutes = require("./users.js")
 const conversationRoutes = require("./conversations.js")
 const messageRoutes = require("./messages.js")
+const notificationRoutes = require("./notifications.js")
 
 const route = (app) => {
     app.use("/api/auth", authRoutes)
@@ -18,6 +19,7 @@ const route = (app) => {
     app.use("/api/users", userRoutes)
     app.use("/api/conversations", conversationRoutes)
     app.use("/api/messages", messageRoutes)
+    app.use("/api/notifications", notificationRoutes)
 }
 
 module.exports = route;

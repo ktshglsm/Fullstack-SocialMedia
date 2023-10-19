@@ -7,6 +7,7 @@ const storyController = require('./story.js');
 const userController = require('./user.js');
 const conversationController = require('./conversation.js');
 const messageController = require('./message.js');
+const notificationController = require('./notification.js');
 
 module.exports = {
     authController,
@@ -18,4 +19,5 @@ module.exports = {
     userController,
     conversationController,
     messageController,
+    notificationController,
 }
