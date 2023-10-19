@@ -77,6 +77,7 @@ const getFriends = async (req, res, next) => {
                 id: friendIds,
             },
         });
+
         return res.status(200).json(friends)
     } catch (error) {
         next(error);

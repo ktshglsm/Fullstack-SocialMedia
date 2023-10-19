@@ -21,6 +21,13 @@ io.on("connection", (socket) => {
         }
     })
 
+    socket.on("addNotification", (notification) => {
+        const user = onlineUsers.find(user => user.userId === notification.receiver);
+        if (user) {
+            io.to(user.socketId).emit("getNotification", notification)
+        }
+    })
+
 
     socket.on("disconnect", () => {
         onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id)
