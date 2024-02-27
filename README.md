@@ -1,4 +1,4 @@
-# Fullstack-SocialMedia (Bé Khúc)
+# Fullstack-SocialMedia 
 ![image](https://github.com/ktshglsm/Fullstack-SocialMedia/assets/80331504/876300b2-a6a6-4d2b-b7de-6f9abcc8fafe)
 
 ![image](https://github.com/ktshglsm/Fullstack-SocialMedia/assets/80331504/78a03413-1b5e-4c13-b579-e577301f67d5)
