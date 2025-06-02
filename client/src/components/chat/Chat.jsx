@@ -121,7 +121,7 @@ const Conversation = ({ secondUser, handleOpenChat }) => {
       <div className="footer">
         <input
           type="text"
-          placeholder="Send..."
+          placeholder="Send...."
           value={text}
           onKeyPress={handleKeyPress}
           onChange={(e) => setText(e.target.value)}
